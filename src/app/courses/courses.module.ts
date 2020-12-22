@@ -7,6 +7,12 @@ import { CoursesComponent } from './courses.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { EditCourseDialog } from './edit-course-dialog/edit-course-dialog.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { StoreModule } from '@ngrx/store';
+
+import { coursesReducer } from './reducers/courses.reducers';
+import { CoursesResolver } from './courses.resolver';
+import { EffectsFeatureModule, EffectsModule } from '@ngrx/effects';
+import { CoursesEffects } from './courses.effects';
 
 export const coursesRoutes: Routes = [
   {
@@ -21,7 +27,9 @@ export const coursesRoutes: Routes = [
     CommonModule,
     RouterModule.forChild(coursesRoutes),
     ReactiveFormsModule,
-    NgSelectModule
+    NgSelectModule,
+    StoreModule.forFeature('courses', coursesReducer),
+    EffectsModule.forFeature([CoursesEffects]),
   ],
   declarations: [
     CoursesComponent,
@@ -29,6 +37,7 @@ export const coursesRoutes: Routes = [
   ],
   providers: [
     CoursesService,
+    CoursesResolver
   ]
 })
 export class CoursesModule {

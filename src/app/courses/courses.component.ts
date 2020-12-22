@@ -1,7 +1,8 @@
 import { Component, OnInit } from "@angular/core";
+import { Store } from "@ngrx/store";
 import { Course } from "./model/course";
-import { CoursesService } from "./services/courses.service";
-
+import { selectAllCourses, selectAdvancedCourses, selectBeginnerCourses } from './courses.selectors';
+import { Observable } from "rxjs";
 export interface ClassifiedCourses {
     catagoryName: string;
     courses: Course[];
@@ -17,52 +18,23 @@ const categories = [advancedType, beginnerType];
     templateUrl: 'courses.component.html'
 })
 export class CoursesComponent implements OnInit {
-    public courses: Course[] = [];
+    public courses$: Observable<Course[]>;
+
     public selectedCourse: Course;
-    public beginnerCourses: ClassifiedCourses;
-    public advancedCourses: ClassifiedCourses;
+    public beginnerCourses$: Observable<Course[]>;
+    public advancedCourses$: Observable<Course[]>;
     public initialDone = false;
     public categories = categories;
 
-    constructor(private coursesService: CoursesService) {}
+    constructor(private store: Store<{}>) {}
 
     ngOnInit() {
-        this.coursesService.findAllCourses().subscribe(courses => {
-            this.courses = courses;
-            this.classifyCategory(courses);
-            this.initialDone = true;
-        });
+        this.courses$ = this.store.select(selectAllCourses);
+        this.advancedCourses$ = this.store.select(selectAdvancedCourses)
+        this.beginnerCourses$ = this.store.select(selectBeginnerCourses)
     }
 
     public displayEditDialog(selectedCourse) {
         this.selectedCourse = selectedCourse;
-    }
-
-    public classifyCategory(courses: Course[]) {
-        this.advancedCourses = {
-            courses: this.getCoursesWithCatagory(courses, advancedType),
-            catagoryName: advancedType
-        };
-
-        this.beginnerCourses = {
-            courses: this.getCoursesWithCatagory(courses, beginnerType),
-            catagoryName: beginnerType
-        };
-    }
-
-    public getCoursesWithCatagory(courses: Course[], type: string) {
-        return courses.filter(course => course.category === type);
-    }
-
-    public courseUpdated(updatedCourse: Course) {
-        const index = this.courses.findIndex(course => updatedCourse.id === course.id);
-        const currentCourse = this.courses[index];
-        this.courses[index] = {
-            ...currentCourse,
-            description: updatedCourse.description,
-            category: updatedCourse.category
-        };
-
-        this.classifyCategory(this.courses);
     }
 }

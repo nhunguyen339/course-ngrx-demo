@@ -1,5 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
+import { Store } from "@ngrx/store";
+import { CourseTypes } from "../courses.types";
 import { Course } from "../model/course";
 import { CoursesService } from "../services/courses.service";
 
@@ -17,10 +19,11 @@ export class EditCourseDialog implements OnInit {
     @Output() public closeDialog = new EventEmitter();
     @Output() public updated = new EventEmitter();
 
-    constructor(private coursesService: CoursesService, public fb: FormBuilder) {}
+    constructor(public fb: FormBuilder, private store: Store) {}
 
     ngOnInit() {
         this.courseForm = this.fb.group({
+            id: this.course.id,
             description: this.course.description,
             category: this.course.category
         });
@@ -32,9 +35,7 @@ export class EditCourseDialog implements OnInit {
 
     public submit() {
         const updatedValue = this.courseForm.getRawValue();
-        this.coursesService.saveCourse(this.course.id, updatedValue).subscribe((updatedCourse) => {
-            this.closeDialog.emit();
-            this.updated.emit({...updatedCourse});
-        });
+        this.store.dispatch(CourseTypes.coursesUpdated({courses: updatedValue}));
+        this.closeDialog.emit();
     }
 }
