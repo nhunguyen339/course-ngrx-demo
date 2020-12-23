@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { CoursesResolve } from './courses/courses.resolver';
 
 
 const routes: Routes = [
   {
     path: 'courses',
-    loadChildren: () => import('./courses/courses.module').then(m => m.CoursesModule)
+    loadChildren: () => import('./courses/courses.module').then(m => m.CoursesModule),
+    resolve: [CoursesResolve]
   },
   {
     path: '**',
@@ -15,6 +17,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [CoursesResolve]
 })
 export class AppRoutingModule { }

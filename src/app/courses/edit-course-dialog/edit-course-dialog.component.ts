@@ -1,7 +1,8 @@
 import { Component, Input, OnInit, Output, EventEmitter } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
+import { Store } from "@ngrx/store";
+import { CoursesTypes } from "../courses.types";
 import { Course } from "../model/course";
-import { CoursesService } from "../services/courses.service";
 
 @Component({
     selector: 'app-edit-course-dialog',
@@ -15,12 +16,12 @@ export class EditCourseDialog implements OnInit {
     @Input() public course: Course;
     @Input() public categories: string;
     @Output() public closeDialog = new EventEmitter();
-    @Output() public updated = new EventEmitter();
 
-    constructor(private coursesService: CoursesService, public fb: FormBuilder) {}
+    constructor(public fb: FormBuilder, private store: Store) {}
 
     ngOnInit() {
         this.courseForm = this.fb.group({
+            id: this.course.id,
             description: this.course.description,
             category: this.course.category
         });
@@ -32,9 +33,7 @@ export class EditCourseDialog implements OnInit {
 
     public submit() {
         const updatedValue = this.courseForm.getRawValue();
-        this.coursesService.saveCourse(this.course.id, updatedValue).subscribe((updatedCourse) => {
-            this.closeDialog.emit();
-            this.updated.emit({...updatedCourse});
-        });
+        this.store.dispatch(CoursesTypes.updateCourse({course: updatedValue}))
+        this.closeDialog.emit();
     }
 }

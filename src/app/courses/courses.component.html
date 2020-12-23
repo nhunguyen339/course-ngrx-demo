@@ -4,13 +4,13 @@
             <div class="col-12">
                 <h1 class="text-center mb-5">Couses</h1>
             </div>
-            <ng-container *ngIf="initialDone">
+            <ng-container>
                 <div class="col-md-6">
                     <div class="row">
                         <div class="col-12 course__item mb-2 text-center">
                             <h5 class="">Beginner</h5>
                         </div>
-                        <div class="col-12 mb-5 course__item" *ngFor="let course of beginnerCourses">
+                        <div class="col-12 mb-5 course__item" *ngFor="let course of beginnerCourses$ | async">
                             <div class="card">
                                 <img class="card-img-top" src="{{ course.iconUrl }}" alt="Card image cap">
                                 <div class="card-body">
@@ -31,7 +31,7 @@
                         <div class="col-12 course__item mb-2 text-center">
                             <h5 class="">Advanced</h5>
                         </div>
-                        <div class="col-12 mb-5 course__item" *ngFor="let course of advancedCourses">
+                        <div class="col-12 mb-5 course__item" *ngFor="let course of advancedCourses$ | async">
                             <div class="card">
                                 <img class="card-img-top" src="{{ course.iconUrl }}" alt="Card image cap">
                                 <div class="card-body">
@@ -51,6 +51,6 @@
         </div>
     </div>
 
-    <app-edit-course-dialog *ngIf="selectedCourse" [course]="selectedCourse" (closeDialog)="selectedCourse=null" [categories]="categories" (updated)="courseUpdated($event)">
+    <app-edit-course-dialog *ngIf="selectedCourse" [course]="selectedCourse" (closeDialog)="selectedCourse=null" [categories]="categories">
     </app-edit-course-dialog>
 </div>

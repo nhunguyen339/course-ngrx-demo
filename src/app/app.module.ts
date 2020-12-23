@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormBuilder, FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   declarations: [
@@ -16,7 +18,9 @@ import { NgSelectModule } from '@ng-select/ng-select';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    NgSelectModule
+    NgSelectModule,
+    StoreModule.forRoot({}),
+    EffectsModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
