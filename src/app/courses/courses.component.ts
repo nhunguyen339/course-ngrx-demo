@@ -2,15 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { Course } from "./model/course";
 import { CoursesService } from "./services/courses.service";
 
-export interface ClassifiedCourses {
-    catagoryName: string;
-    courses: Course[];
-}
-
-const advancedType = 'ADVANCED';
-const beginnerType = 'BEGINNER';
-
-const categories = [advancedType, beginnerType];
+const categories = ['BEGINNER', 'ADVANCED'];
 @Component({
     selector: 'app-courses',
     styleUrls: [`courses.component.scss`],
@@ -19,8 +11,8 @@ const categories = [advancedType, beginnerType];
 export class CoursesComponent implements OnInit {
     public courses: Course[] = [];
     public selectedCourse: Course;
-    public beginnerCourses: ClassifiedCourses;
-    public advancedCourses: ClassifiedCourses;
+    public beginnerCourses: Course[];
+    public advancedCourses: Course[];
     public initialDone = false;
     public categories = categories;
 
@@ -28,8 +20,7 @@ export class CoursesComponent implements OnInit {
 
     ngOnInit() {
         this.coursesService.findAllCourses().subscribe(courses => {
-            this.courses = courses;
-            this.classifyCategory(courses);
+            this.reload(courses);
             this.initialDone = true;
         });
     }
@@ -38,16 +29,11 @@ export class CoursesComponent implements OnInit {
         this.selectedCourse = selectedCourse;
     }
 
-    public classifyCategory(courses: Course[]) {
-        this.advancedCourses = {
-            courses: this.getCoursesWithCatagory(courses, advancedType),
-            catagoryName: advancedType
-        };
+    public reload(courses) {
+        this.courses = courses;
 
-        this.beginnerCourses = {
-            courses: this.getCoursesWithCatagory(courses, beginnerType),
-            catagoryName: beginnerType
-        };
+        this.advancedCourses = this.courses.filter(course => course.category === 'ADVANCED');
+        this.beginnerCourses = this.courses.filter(course => course.category === 'BEGINNER');
     }
 
     public getCoursesWithCatagory(courses: Course[], type: string) {
@@ -63,6 +49,6 @@ export class CoursesComponent implements OnInit {
             category: updatedCourse.category
         };
 
-        this.classifyCategory(this.courses);
+        this.reload(this.courses);
     }
 }

@@ -21,6 +21,7 @@ export class EditCourseDialog implements OnInit {
 
     ngOnInit() {
         this.courseForm = this.fb.group({
+            id: this.course.id,
             description: this.course.description,
             category: this.course.category
         });
