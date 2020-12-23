@@ -5,12 +5,33 @@
                 <h1 class="text-center mb-5">Couses</h1>
             </div>
             <ng-container *ngIf="initialDone">
-                <div class="col-md-6" *ngFor="let courses of [advancedCourses, beginnerCourses]">
+                <div class="col-md-6">
                     <div class="row">
                         <div class="col-12 course__item mb-2 text-center">
-                            <h5 class="">{{ courses.catagoryName }}</h5>
+                            <h5 class="">Beginner</h5>
                         </div>
-                        <div class="col-12 mb-5 course__item" *ngFor="let course of courses.courses">
+                        <div class="col-12 mb-5 course__item" *ngFor="let course of beginnerCourses">
+                            <div class="card">
+                                <img class="card-img-top" src="{{ course.iconUrl }}" alt="Card image cap">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ course.description }}</h5>
+                                    <p>Category: {{ course.category }}</p>
+                                    <div class="card-button-wrapper">
+                                        <button (click)="displayEditDialog(course)" type="button" class="btn btn-primary">
+                                            Quick edit
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-12 course__item mb-2 text-center">
+                            <h5 class="">Advanced</h5>
+                        </div>
+                        <div class="col-12 mb-5 course__item" *ngFor="let course of advancedCourses">
                             <div class="card">
                                 <img class="card-img-top" src="{{ course.iconUrl }}" alt="Card image cap">
                                 <div class="card-body">
